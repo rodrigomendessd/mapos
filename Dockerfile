@@ -44,13 +44,12 @@ RUN chown -R www-data:www-data /var/www/html \
 
 RUN echo "*/2 * * * * www-data php /var/www/html/index.php email/process >> /var/log/cron_email.log 2>&1" >> /etc/cron.d/mapos \
     && echo "*/5 * * * * www-data php /var/www/html/index.php email/retry >> /var/log/cron_email.log 2>&1" >> /etc/cron.d/mapos \
-    && chmod 0644 /etc/cron.d/mapos \
-    && crontab /etc/cron.d/mapos
+    && chmod 0644 /etc/cron.d/mapos
 
 RUN echo "upload_max_filesize = 64M\npost_max_size = 64M\nmax_execution_time = 120\nmemory_limit = 256M\nopcache.enable=1\nopcache.memory_consumption=128\nopcache.max_accelerated_files=8000" > /usr/local/etc/php/conf.d/mapos.ini
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+RUN sed -i 's/\r//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh
 
 EXPOSE 80
 CMD ["/docker-entrypoint.sh"]
