@@ -25,5 +25,4 @@ RUN chown -R www-data:www-data /var/www/html \
 RUN echo "upload_max_filesize=64M\npost_max_size=64M\nmax_execution_time=120\nmemory_limit=256M" > /usr/local/etc/php/conf.d/mapos.ini
 
 EXPOSE 80
-
-CMD ["/bin/sh","-c","printf 'base_url=%s\ndb_hostname=%s\ndb_username=%s\ndb_password=%s\ndb_database=%s\nencryption_key=%s\n' $BASE_URL $DB_HOST $DB_USER $DB_PASS $DB_NAME $ENCRYPTION_KEY > /var/www/html/application/.env && apache2-foreground"]
+CMD ["apache2-foreground"]
