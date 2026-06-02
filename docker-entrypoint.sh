@@ -1,12 +1,8 @@
 #!/bin/bash
 set -e
 
-# Inicia o cron daemon
-service cron start
-
 # Gera .env a partir das variaveis de ambiente do container (Easypanel)
 if [ ! -f /var/www/html/application/.env ]; then
-    echo "Gerando .env a partir das variaveis de ambiente..."
     cat > /var/www/html/application/.env <<EOF
 base_url="${BASE_URL:-http://localhost/}"
 db_hostname="${DB_HOST:-mysql}"
@@ -19,9 +15,12 @@ EOF
 fi
 
 # Remove pasta install se ja instalado (seguranca)
-if [ -f /var/www/html/application/.env ] && [ -d /var/www/html/install ]; then
+if [ -d /var/www/html/install ]; then
     rm -rf /var/www/html/install
 fi
+
+# Inicia cron em background
+cron
 
 # Inicia Apache em foreground
 exec apache2-foreground
